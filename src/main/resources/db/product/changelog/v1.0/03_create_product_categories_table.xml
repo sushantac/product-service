@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="03-create-product-categories-table" author="product-service">
+        <preConditions>
+            <not><tableExists tableName="product_categories" schemaName="product"/></not>
+        </preConditions>
+        <createTable tableName="product_categories" schemaName="product">
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="product_categories" schemaName="product"
+                       columnNames="product_id, category_id"/>
+        <addForeignKeyConstraint baseTableName="product_categories" baseTableSchemaName="product"
+                                 baseColumnNames="product_id" constraintName="fk_pc_product"
+                                 referencedTableName="products" referencedTableSchemaName="product"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="product_categories" baseTableSchemaName="product"
+                                 baseColumnNames="category_id" constraintName="fk_pc_category"
+                                 referencedTableName="categories" referencedTableSchemaName="product"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
