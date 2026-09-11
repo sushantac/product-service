@@ -8,6 +8,7 @@ server:
 spring:
   application:
     name: product-service
+
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:ecommerce}?currentSchema=product
     username: ${DB_USERNAME:ecommerce}
@@ -16,6 +17,7 @@ spring:
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -23,12 +25,15 @@ spring:
       hibernate:
         default_schema: product
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
   liquibase:
     enabled: true
     change-log: classpath:db/product/changelog/db.changelog-master.xml
     default-schema: product
+    create-schema: true
+
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -36,6 +41,7 @@ spring:
       retries: 3
     properties:
       spring.json.trusted.packages: com.ecommerce.product.event
+
   security:
     oauth2:
       resourceserver:
@@ -60,9 +66,3 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
-
-  liquibase:
-    create-schema: true
-
-  liquibase:
-    create-schema: true
