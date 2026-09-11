@@ -60,3 +60,9 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+  liquibase:
+    create-schema: true
+
+  liquibase:
+    create-schema: true
