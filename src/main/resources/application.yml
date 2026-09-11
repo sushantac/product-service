@@ -30,7 +30,6 @@ spring:
     enabled: true
     change-log: classpath:db/product/changelog/db.changelog-master.xml
     default-schema: product
-    create-schema: true
 
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
