@@ -1,19 +1,11 @@
-server:
-  port: 8083
-  shutdown: graceful
-  tomcat:
-    connection-timeout: 20s
-    keep-alive-timeout: 20s
-
 spring:
   application:
-    name: product-service
+    name: product
 
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:ecommerce}?currentSchema=product
     username: ${DB_USERNAME:ecommerce}
     password: ${DB_PASSWORD:secret}
-    driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
@@ -24,7 +16,8 @@ spring:
     properties:
       hibernate:
         default_schema: product
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
 
   liquibase:
     enabled: true
@@ -32,14 +25,17 @@ spring:
     default-schema: product
 
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    bootstrap.servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      acks: all
-      retries: 3
-    properties:
-      spring.json.trusted.packages: com.ecommerce.product.event
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.ecommerce.product.event
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.ecommerce.cart.dto.OrderPlacedEvent
 
   security:
     oauth2:
@@ -47,9 +43,16 @@ spring:
         jwt:
           secret: ${JWT_SECRET:dev-secret-change-me-please-at-least-32chars-long-123}
 
-app:
-  internal:
-    api-key: ${INTERNAL_API_KEY:internal-service-key-12345}
+  threads:
+    virtual:
+      enabled: true
+
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+server:
+  port: 8083
+  shutdown: graceful
 
 management:
   endpoints:
@@ -60,8 +63,15 @@ management:
     health:
       show-details: when-authorized
 
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /swagger-ui.html
+app:
+  internal:
+    api-key: ${INTERNAL_API_KEY:internal-service-key-12345}
+  product-service:
+    url: ${PRODUCT_SERVICE_URL:http://localhost:8083}
+  jwt:
+    secret: ${JWT_SECRET:dev-secret-change-me-please-at-least-32chars-long-123}
+  kafka:
+    enabled: true
+    topics:
+      cart-checkout: cart.checkout.initiated
+      order-placed: order.placed
