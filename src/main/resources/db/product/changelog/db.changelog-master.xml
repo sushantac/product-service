@@ -3,6 +3,9 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="00_create_schema" author="sushant">
+        <sql>CREATE SCHEMA IF NOT EXISTS product</sql>
+    </changeSet>
     <include file="db/product/changelog/v1.0/01_create_products_table.xml"/>
     <include file="db/product/changelog/v1.0/02_create_categories_table.xml"/>
     <include file="db/product/changelog/v1.0/03_create_product_categories_table.xml"/>
