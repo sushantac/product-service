@@ -31,10 +31,9 @@ spring:
     change-log: classpath:db/product/changelog/db.changelog-master.xml
     default-schema: product
 
-  spring:
-    kafka:
-    bootstrap.servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
-      producer:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       acks: all
